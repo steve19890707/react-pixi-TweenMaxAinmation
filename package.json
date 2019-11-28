@@ -1,0 +1,38 @@
+{
+    "name": "react",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "live-server ./ --port=8080",
+        "build": "webpack --config webpack.config.js",
+        "watch": "webpack -w"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/cli": "^7.6.4",
+        "@babel/core": "^7.6.4",
+        "@babel/plugin-transform-runtime": "^7.6.2",
+        "@babel/preset-env": "^7.6.3",
+        "@babel/preset-react": "^7.6.3",
+        "@babel/runtime": "^7.6.3",
+        "babel-loader": "^8.0.6",
+        "classnames": "^2.2.6",
+        "current-device": "^0.9.1",
+        "gsap": "^3.0.1",
+        "immer": "^4.0.2",
+        "immutable": "^4.0.0-rc.12",
+        "live-server": "^1.2.1",
+        "pixi.js": "^5.2.0",
+        "react": "^16.10.2",
+        "react-dom": "^16.10.2",
+        "react-icons": "^3.8.0",
+        "react-router-dom": "^5.1.2",
+        "styled-components": "^4.4.0",
+        "webpack": "^4.41.2",
+        "webpack-cli": "^3.3.9"
+    },
+    "dependencies": {}
+}
