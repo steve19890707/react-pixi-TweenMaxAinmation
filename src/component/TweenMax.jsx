@@ -1,6 +1,8 @@
 import React,{ useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { TimelineMax, TimelineLite,TweenMax, Bounce  } from 'gsap';
+import { IoMdClose, IoIosCube, IoIosList } from "react-icons/io";
+import cx from 'classnames';
 
 const TweenMaxDiv = styled.div`
     position: relative;
@@ -13,12 +15,6 @@ const TweenMaxDiv = styled.div`
         background-color: #FFBF00;
         height:100%;
         width: 0%;
-        .title {
-            position: absolute;
-            top:0;
-            color:#fff;
-            font-size:24px;
-        }
         .smallCar {
             position: absolute;
             left:-16.6666%;
@@ -51,6 +47,23 @@ const TweenMaxDiv = styled.div`
             background-color: #2f8cff;
             background-image: url("./dis/img/background.png");
             background-size:100%;
+            .title {
+                position: absolute;
+                top:10px;
+                right:10px;
+                color:#fff;
+                font-size:24px;
+            }
+            .mainTitle {
+                position: absolute;
+                top:25%;
+                left:60%;
+                transform: translate(-50%,-50%);
+                font-size:35px;
+                color:#fff;
+                text-shadow:0 0 5px rgb(0,0,0,0.5);
+                z-index:2;
+            }
             .car {
                 position: absolute;
                 left:0;
@@ -79,24 +92,128 @@ const TweenMaxDiv = styled.div`
             }
         }
     }
+    .flexArea {
+        position: fixed;
+        top:0;
+        left:0;
+        margin-top:20px;
+        transform:translateX(-100%);
+        transition:0.2s;
+        z-index:2;
+        &.active {
+            transform:translateX(0%);
+            .clickBtn { 
+                width:30px;
+                height:30px;
+                right:0;
+                border-radius:50px;
+                background-color:#fff;
+                transform:translateX(0%);
+                svg {
+                    width:20px;
+                    height:20px;
+                    margin:5px;
+                    &:nth-child(1) { display:none; }
+                    &:nth-child(2) { display:block; }
+                }
+                &:hover { svg { color:#777; } }
+            }
+        }
+        .clickBtn {
+            position: absolute;
+            top:0px;
+            right:-20px;
+            transform:translateX(100%);
+            width:40px;
+            height:40px;
+            border-radius:5px;
+            background-color:#1d1d1d;
+            cursor: pointer;
+            svg {
+                width:30px;
+                height:30px;
+                margin:5px;
+                color:#777;
+                transition:0.2s;
+                &:nth-child(2) { display:none; }
+            }
+            &:hover { svg { color:#fff; } }
+        }
+        .list {
+            margin-top:45px;
+            li {
+                box-sizing:border-box;
+                padding:15px 20px 15px 15px;
+                margin-bottom:8px;
+                border-radius:0 50px 50px 0;
+                display:flex;
+                align-items:center;
+                box-shadow:0 0 5px rgb(0,0,0,0.5);
+                cursor: pointer;
+                svg {
+                    width:18px;
+                    height:18px;
+                    color:#fff;
+                    margin-right:8px;
+                }
+                span {
+                    font-size:18px;
+                    color:#fff;
+                }
+                &.red {
+                    background:linear-gradient(to bottom,#ff0101,#840000);
+                    text-shadow:0 0 2px #840000;
+                    border:1px solid #ff0101;
+                    border-left:none;
+                    &:hover { background:linear-gradient(to top,#ff0101,#840000); }
+                }
+                &.blue {
+                    background:linear-gradient(to bottom,#3c4bff,#001767);
+                    text-shadow:0 0 2px #001767;
+                    border:1px solid #3c4bff;
+                    border-left:none;
+                    &:hover { background:linear-gradient(to top,#3c4bff,#001767); }
+                }
+                &.green {
+                    background:linear-gradient(to bottom,#00e607,#006504);
+                    text-shadow:0 0 2px #006504;
+                    border:1px solid #00e607;
+                    border-left:none;
+                    &:hover { background:linear-gradient(to top,#00e607,#006504); }
+                }
+                &.purple {
+                    background:linear-gradient(to bottom,#730aff,#27005d);
+                    text-shadow:0 0 2px #27005d;
+                    border:1px solid #673ab7;
+                    border-left:none;
+                    &:hover { background:linear-gradient(to top,#730aff,#27005d); }
+                }
+                &:last-child {
+                    margin-bottom:0;
+                }
+            }
+        }
+    }
 `
 export default () => {
     const savedHandlerScroll = useRef();
     const savedHandlerMousemove = useRef();
+    const background = document.getElementById('background') || null;
     const TLL = new TimelineLite;
-    // const TLMax = new TimelineMax();
-    const [testNumber, setTestNumber] = useState({
+    const TLMax = new TimelineMax();
+    const [ testNumber, setTestNumber ] = useState({
         number: 100,
     })
+    const [ asideOpen, setAsideOpen ] = useState(false)
+
+    // useEffect
 
     useEffect(() => {
         savedHandlerScroll.current = scrollEvent;
     }, [scrollEvent]);
-
     useEffect(() => {
         savedHandlerMousemove.current = mousemoveEvent;
     }, [mousemoveEvent]);
-
     useEffect(() => {
         TLL.to(".runCar-1",1,{ opacity:1, x:"0%", y:"50%"});
         TLL.to(".runCar-2",1,{ opacity:1, x:"0%", y:"50%"});
@@ -106,7 +223,6 @@ export default () => {
         TLL.to(".runCar-6",1,{ opacity:1, x:"0%", y:"50%"});
         TLL.pause();
     },[ TLL ]);
-
     useEffect(() => {
         const isSupported = window && window.addEventListener;
         if (!isSupported) return;
@@ -116,20 +232,20 @@ export default () => {
             window.removeEventListener('scroll', eventListener);
         };
     },['scroll', window]);
-
     useEffect(() => {
-        const isSupported = window && window.addEventListener;
+        const isSupported = background && background.addEventListener;
         if (!isSupported) return;
         const eventListener = mousemoveEvent => savedHandlerMousemove.current(mousemoveEvent);
-        window.addEventListener('mousemove', eventListener);
+        background.addEventListener('mousemove', eventListener);
         return () => {
-            window.removeEventListener('mousemove', eventListener);
+            background.removeEventListener('mousemove', eventListener);
         };
-    },['mousemove', window]);
-
+    },['mousemove', background]);
     useEffect(()=>{
         divAinmation()
     },[]);
+
+    // TweenMax
     const divAinmation = ()=> { 
         TweenMax.to("#box",1,{ 
             width:"100%",
@@ -167,6 +283,31 @@ export default () => {
             },
         })
     };
+    const staggerList = ()=> {
+        setAsideOpen(!asideOpen);
+        if(asideOpen === false) {
+            TLMax.kill()
+            TLMax.staggerFrom(".option", 0.5,
+                {
+                    x:"-100%",
+                    scaleX:0,
+                    scaleY:0,
+                }, 
+            0.2);
+        }else { 
+            TLMax.kill()
+            TLMax.set(".option",
+                {
+                    x:"0%",
+                    scaleX:1,
+                    scaleY:1,
+                } 
+            );
+        }
+    };
+
+    // Event
+
     const scrollEvent = (e)=> {
         let scrollTop = window.pageYOffset;
         let docHeight = e.srcElement.body.scrollHeight;
@@ -175,14 +316,33 @@ export default () => {
         TLL.progress(progress);
     };
     const mousemoveEvent = (e)=> {
-        let pageX = e.clientX;
-        TweenMax.to(".background",1.2,{"background-position-x": pageX + "px"})
+        let pageX = e.clientX / 10;
+        let pageY = e.clientY / 10;
+        TweenMax.to(".background",1,{"background-position-x": -pageX + "px"});
+        TweenMax.to(".background",1,{"background-position-y": -pageY + "px"});
     };
     return(
         <TweenMaxDiv>
+            <aside className={cx("flexArea",{ active : asideOpen })}>
+                <div className="clickBtn" onClick={ 
+                    ()=> { staggerList()}
+                 }>
+                    <IoIosList />
+                    <IoMdClose />
+                </div>
+                <ul className="list">
+                    <li className="option red"><IoIosCube /><span>select bar - RED</span></li>
+                    <li className="option blue"><IoIosCube /><span>select bar - BLUE</span></li>
+                    <li className="option green"><IoIosCube /><span>select bar - GREEN</span></li>
+                    <li className="option purple"><IoIosCube /><span>select bar - PURPLE</span></li>
+                </ul>
+            </aside>
             <div id="box" className="simple1">
-                <div className="title">Numder add: {testNumber.number}</div>
-                <div className="background"><div id="car" className="car"></div></div>
+                <div id="background" className="background">
+                    <div className="mainTitle">Hello! Welcome</div>
+                    <div className="title">Numder add: {testNumber.number}</div>
+                    <div id="car" className="car" />
+                </div>
                 {/* <div className="smallCar smallCar-1"></div>
                 <div className="smallCar smallCar-2"></div>
                 <div className="smallCar smallCar-3"></div>
