@@ -1,9 +1,11 @@
 import React,{ useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { TimelineMax, TimelineLite,TweenMax, Bounce  } from 'gsap';
+import { TimelineMax, TimelineLite,TweenMax, Bounce, gsap } from 'gsap';
+import TextPlugin from "gsap/TextPlugin";
 import { IoMdClose, IoIosCube, IoIosList } from "react-icons/io";
 import cx from 'classnames';
 
+gsap.registerPlugin(TextPlugin);
 const TweenMaxDiv = styled.div`
     position: relative;
     width:100%;
@@ -15,31 +17,6 @@ const TweenMaxDiv = styled.div`
         background-color: #FFBF00;
         height:100%;
         width: 0%;
-        .smallCar {
-            position: absolute;
-            left:-16.6666%;
-            bottom:0;
-            transform:scale(0,0);
-            width: 141px;
-            height: 68px;
-            background-image: url("./dis/img/car.png");
-            background-size:100%;
-            &-2 {
-                left:0%;
-            };
-            &-3 {
-                left:16.6666%;
-            };
-            &-4 {
-                left:33.3333%;
-            };
-            &-5 {
-                left:50%;
-            };
-            &-6 {
-                left:66.6666%;
-            };
-        }
         .background {
             position: relative;
             width:100%;
@@ -253,6 +230,7 @@ export default () => {
             onComplete: () => {
                 carAinmation();
                 NumberUpdate();
+                textChange();
             },
         });
     };
@@ -265,14 +243,9 @@ export default () => {
             ease: Bounce.easeOut,
         });
     };
-    // const allCarAnimation = ()=> {
-    //     TLMax.staggerTo(".smallCar",2,{
-    //         scaleX: 1,
-    //         scaleY: 1,
-    //         x:"100%",
-    //         ease: Bounce.easeOut,
-    //     }, 0.3)
-    // };
+    const textChange = ()=> {
+        TweenMax.to(".mainTitle", 3,{text: "This is Animate World!"});
+    }  
     const NumberUpdate = ()=> {
         TweenMax.to(testNumber, 2 ,{
             number:0,
@@ -343,12 +316,6 @@ export default () => {
                     <div className="title">Numder add: {testNumber.number}</div>
                     <div id="car" className="car" />
                 </div>
-                {/* <div className="smallCar smallCar-1"></div>
-                <div className="smallCar smallCar-2"></div>
-                <div className="smallCar smallCar-3"></div>
-                <div className="smallCar smallCar-4"></div>
-                <div className="smallCar smallCar-5"></div>
-                <div className="smallCar smallCar-6"></div> */}
                 <ul className="parallaxList">
                     <li className="parallaxCar parallaxCar-1">
                         <div className="runCar runCar-1"></div>
