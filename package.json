@@ -22,7 +22,7 @@
         "classnames": "^2.2.6",
         "current-device": "^0.9.1",
         "gsap": "^3.0.1",
-        "immer": "^4.0.2",
+        "immer": "^9.0.6",
         "immutable": "^4.0.0-rc.12",
         "live-server": "^1.2.1",
         "pixi.js": "^5.2.0",
